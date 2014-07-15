@@ -23,7 +23,22 @@ A company wide challenge is issued for the engineer who can develop the best mod
 
 ## Data
 
-To access data....
+To access data. Follow steps which will setup environment and install the data files into the data folder:
+
+    $ mkvirtualenv dmcontest
+    $ git clone git@github.com:infoscout/dmcontest.git
+    $ cd dmcontest
+    $ pip install -r requirements.txt
+    $ python download.py
+    
+The following 4 datasets are provided:
+
+* trained_brands.csv - Trained Brands
+* trained_categories.csv - Trained Categories
+* unknown_brands.csv - Unknown brands
+* unknown_categories.csv - Unknown categories
+
+
 
 
 ## Ideas
