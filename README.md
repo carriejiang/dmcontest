@@ -33,24 +33,36 @@ To access data. Follow steps which will setup environment and install the data f
     
 The following 4 datasets are provided:
 
-* trained_brands.csv - Trained Brands
-* trained_categories.csv - Trained Categories
-* unknown_brands.csv - Unknown brands
-* unknown_categories.csv - Unknown categories
+* `trained_brands.csv` - Trained Brands
+* `trained_categories.csv` - Trained Categories
+* `unknown_brands.csv - Unknown brands
+* `unknown_categories.csv` - Unknown categories
 
+    
+Check `read.py` to see example of reading the data:
 
+    $ python read.py
+    
+
+For `trained_brands.csv` for example, you will likely be most interested in:
+
+* 
 
 
 ## Ideas
 
-* Winning model will likely include a number an array of approaches, with each having their own recall/precision benefit.
+* Browse the RSD binder to get a sense of the gaps in brand & categoires
+
+* Trained items with higher counts (number of occurences on a receipt) will likely be considered more confident as we've spent more time on the head then tail. 
+
+* Winning model will likely include a number of approaches, with yielding their own recall/precision benefit.
 
 * Edit Distance - RSD's with an edit distance of 1 will likely yield high precision. Edit distance of 2+ will have to be careful with
 
-* TFIDF - Term frequency is another approach 
+* TFIDF - Term frequency
 
-* Term/Character Location - Often the front part of the string may provider a better indicator than the latter part
+* Term/Character Location - Often the front part of the string may provider a better indicator than the latter part.
 
-* Business Rulesets - While advanced models will likely be required, be aware a list of simple rulesets may also provide significant recall.
+* Business Rulesets - While advanced models will likely be required, a list of simple rulesets may also provide significant recall.
 
 
