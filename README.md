@@ -46,7 +46,14 @@ Check `read.py` to see example of reading the data:
 
 For `trained_brands.csv` for example, you will likely be most interested in:
 
-* 
+* `item_descriptor` - RSD (receipt short description) or Item Description (what's scrapped off a website)
+* `major_brand` - The top level brand assigned
+* `medium_brand` - The next brand level down
+* `count` The number of occurences on receipts
+
+## Developing your model
+
+Simply create a branch to develop your model on (no peaking!). 
 
 
 ## Ideas
@@ -59,7 +66,7 @@ For `trained_brands.csv` for example, you will likely be most interested in:
 
 * Edit Distance - RSD's with an edit distance of 1 will likely yield high precision. Edit distance of 2+ will have to be careful with
 
-* TFIDF - Term frequency
+* TFIDF - Term frequency is another approach. 
 
 * Term/Character Location - Often the front part of the string may provider a better indicator than the latter part.
 
