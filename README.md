@@ -72,4 +72,4 @@ Simply create a branch to develop your model on (no peaking!).
 
 * Business Rulesets - While advanced models will likely be required, a list of simple rulesets may also provide significant recall.
 
-
+* Third party tools (i.e. Google Predict, etc) are fair game!
