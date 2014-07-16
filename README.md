@@ -35,7 +35,7 @@ The following 4 datasets are provided:
 
 * `trained_brands.csv` - Trained Brands
 * `trained_categories.csv` - Trained Categories
-* `unknown_brands.csv - Unknown brands
+* `unknown_brands.csv` - Unknown brands
 * `unknown_categories.csv` - Unknown categories
 
     
