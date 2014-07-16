@@ -51,6 +51,14 @@ For `trained_brands.csv` for example, you will likely be most interested in:
 * `medium_brand` - The next brand level down
 * `count` The number of occurences on receipts
 
+#### Data Cleaning
+
+Note you'll want to peform some level of cleaning on both training and unknown data before prediction. A few notes:
+
+* Removing amounts / qtys that should not be included (i.e. QTY 3 DIET COKE)
+* Ignoring or removing indeterminate / unknown
+
+
 ## Developing your model
 
 Simply create a branch to develop your model on (no peaking!). 
