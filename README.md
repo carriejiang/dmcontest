@@ -60,7 +60,7 @@ For `trained_brands.csv` for example, you will likely be most interested in:
 * `medium_brand` - The next brand level down
 * `count` The number of occurences on receipts
 
-I also recommend at browing the (datasources binder)[http://ds.infoscoutinc.com/admin/datasieve/binder] to get a quick understanding of the gaps in our data.
+I also recommend at browing the [datasources binder](http://ds.infoscoutinc.com/admin/datasieve/binder) to get a quick understanding of the gaps in our data.
 
 
 #### Data Cleaning
