@@ -23,6 +23,8 @@ A company wide challenge is issued for the engineer who can develop the best mod
 
 ## Data
 
+#### Downloading the data
+
 To access data. Follow steps which will setup environment and install the data files into the data folder:
 
     $ mkvirtualenv dmcontest
@@ -43,6 +45,9 @@ In addition the following be helpful:
 * `brands.csv` - Brand keys and descriptions
 * `categories.csv` - Categories key and descriptions
     
+
+#### Browsing data
+
 Check `read.py` to see example of reading the data:
 
     $ python read.py
@@ -54,6 +59,9 @@ For `trained_brands.csv` for example, you will likely be most interested in:
 * `major_brand` - The top level brand assigned
 * `medium_brand` - The next brand level down
 * `count` The number of occurences on receipts
+
+I also recommend at browing the (datasources binder)[http://ds.infoscoutinc.com/admin/datasieve/binder] to get a quick understanding of the gaps in our data.
+
 
 #### Data Cleaning
 
