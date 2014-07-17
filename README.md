@@ -38,6 +38,10 @@ The following 4 datasets are provided:
 * `unknown_brands.csv` - Unknown brands
 * `unknown_categories.csv` - Unknown categories
 
+In addition the following be helpful:
+
+* `brands.csv` - Brand keys and descriptions
+* `categories.csv` - Categories key and descriptions
     
 Check `read.py` to see example of reading the data:
 
