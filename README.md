@@ -1,5 +1,9 @@
 ## Datamaster Prediction Contest
 
+UPDATE: DMContest extended to 10/15 
+
+
+
 One of our biggest challenges to wider and scalable adoption of our dataset is our ability to match receipt lines items to categories and brands. To date we've primarily relied on human training in conjunction with a few ML approach's.
 
 A company wide challenge is issued for the engineer who can develop the best model to predict unknown RSD's / item descriptions to brand AND categories.
