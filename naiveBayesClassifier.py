@@ -11,23 +11,24 @@ class NaiveBayesClassifier(object):
 		self.data = trainedData
 		self.defaultProb = 0.000000001
 	
-	def classify(self, unknownClass_csv):
+	def classify(self, unknownClass_csv, numToTest):
 		
 		# dict of most probable class for RSD
 		# predictedClass[RSD] = class
 		predictedClass = {}
 		
 		classes = self.data.getClassList()
+		totalRSDCount = self.data.getTotalRSDCount()
 		
 		# read csv of unknown RSD classifications for RSD
 		RSD = []
 		with open(unknownClass_csv, 'rb') as unknownClassFile:
 			classReader = csv.reader(unknownClassFile, delimiter = ',', quotechar = '"')
-			firstLine = True
 			for row in classReader:
-				if firstLine: # skips first line of CSV file
-					firstLine = False
-					continue
+				if numToTest < 1:
+					break
+				numToTest = numToTest - 1
+				next(classReader, None) #skip the headers
 				RSD.append(row[2])
 		
 		# for each RSD
@@ -53,17 +54,19 @@ class NaiveBayesClassifier(object):
                 			itemProb = 0
 				
 				# probability * priorProb
-				probsOfClasses[className] = itemProb * self.getPrior(className)
+				probsOfClasses[className] = itemProb * self.getPrior(className,totalRSDCount)
+			
 				
 			# sort by highest probability
 			# store class with highest probability in predictedClass
 			predictedClass[item] = max(probsOfClasses.iteritems(), 
 									key=operator.itemgetter(1))[0]
-										
+						
+							
 		return predictedClass
 				
-	def getPrior(self, className):
-		return self.data.getClassRSDCount(className)/self.data.getTotalRSDCount()
+	def getPrior(self, className, getTotalRSDCount):
+		return self.data.getClassRSDCount(className)/getTotalRSDCount
 		
 	def getTokenProb(self, token, className):
 		#p(token|Class_i)

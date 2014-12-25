@@ -24,11 +24,17 @@ class TrainingData(object):
 		# Sub Dicts: key = token in RSD, value = number of occurences in RSD 
 		trainedFile = {}
 		count = {}
+
+		# brands classification that is still "unknown"
+		unknownList = Set(['INDETERMINATE','PRIVATE_LABEL', 'UNKNOWN'])		
+
 		with open(csv_trainedClass, 'rb') as trainedClassFile:
 			trainedClassReader = csv.reader(trainedClassFile, delimiter = ',', quotechar = '"')
 			next(trainedClassReader, None) #skip the headers
 			
 			for row in trainedClassReader:
+				if row[6].upper() in unknownList:
+					continue
 				trainedFile[row[1].upper()] = row[6].upper()
 				count[row[1].upper()] = int(row[3])
 
@@ -52,9 +58,9 @@ class TrainingData(object):
 					for token in RSDtokens:
 						classDict = self.trainedClass_hash[classvalue]
 						if token in classDict:
-							classDict[token] += 1 * count[rsd]
+							classDict[token] += count[rsd]
 						else:
-							classDict[token] = 1 + 1 * count[rsd]
+							classDict[token] = 1 + count[rsd]
 						
 			return self.trainedClass_hash
 		return getTokensFromDoc(trainedFile, count)
