@@ -17,7 +17,7 @@ import time
 
 start = time.time()
 
-NUMTOTEST = 10000
+NUMTOTEST = 5000
 n = 0.035 #top % most frequent words for each brand in training set
 
 BRANDS_LIST = 'data/brands.csv'
