@@ -23,8 +23,8 @@ class classifyBrands(object):
 		
 		self.defaultProb = .00000001
 		
-# 		self.right = [0,0]
-# 		self.wrong = [0,0]
+		self.right = [0,0]
+		self.wrong = [0,0]
 		
 	def identifyBrands(self, unknown_brands, numToTest):		
 		# read unknown brands file
@@ -111,8 +111,8 @@ class classifyBrands(object):
 		
 		#####
 		acc = self.accuracy[0]/sum(self.accuracy)*100
-# 		print "right=" + str(self.right[0]/self.right[1])
-# 		print "wrong=" + str(self.wrong[0]/self.wrong[1])
+		print "right=" + str(self.right[0]/self.right[1])
+		print "wrong=" + str(self.wrong[0]/self.wrong[1])
 		print "Accuracy: " + str(acc) + "%"
 		#####
 		
@@ -178,14 +178,14 @@ class classifyBrands(object):
 		
 		# normalize probabilities
 		for k in probsOfClasses.keys():
-			probsOfClasses[k] = probsOfClasses[k]/highestProb
+			probsOfClasses[k] = probsOfClasses[k]/highestProb[1]
 		
 		# update class highest predicted probability
 		highestProb = max(probsOfClasses.iteritems(), key=operator.itemgetter(1))
 		
 		# remove all potentially wrongly classified brands
 		lowestProb = min(probsOfClasses.iteritems(), key=operator.itemgetter(1))
-		if highestProb[1] - lowestProb[1] > 0.1:
+		if highestProb[1] - lowestProb[1] < 0.97:
 			return self.predictedClass
 		
 		self.predictedClass[item_descriptor] = highestProb[0]
@@ -193,15 +193,15 @@ class classifyBrands(object):
 		#####
 		if item_descriptor.upper() in self.trainedRSD[highestProb[0]]: # for training data file
 # 			print "right: " + item_descriptor + ": " + str(highestProb[1]-lowestProb[1]) #DEBUG
-# 			self.right[0] += highestProb[1]-lowestProb[1] #DEBUG
-# 			self.right[1] += 1 #DEBUG
+			self.right[0] += highestProb[1]-lowestProb[1] #DEBUG
+			self.right[1] += 1 #DEBUG
 		
 			self.accuracy[0] += int(count)
 		else:
 			lowestProb = min(probsOfClasses.iteritems(), key=operator.itemgetter(1)) #DEBUG
 # 			print "wrong: " + item_descriptor + ": " + str(highestProb[1]-lowestProb[1]) #DEBUG
-# 			self.wrong[0] += highestProb[1]-lowestProb[1] #DEBUG
-# 			self.wrong[1] += 1 #DEBUG
+			self.wrong[0] += highestProb[1]-lowestProb[1] #DEBUG
+			self.wrong[1] += 1 #DEBUG
 			
 			self.accuracy[1] += int(count)
 		#####
