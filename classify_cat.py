@@ -1,7 +1,7 @@
 from __future__ import division
 
 import csv
-import operator
+from operator import itemgetter
 import random
 import re
 from sets import Set
@@ -10,7 +10,6 @@ from ExceptionNotSeen import NotSeen
 class classifyCat(object):
 	def __init__(self, trained_data):
 		self.data = trained_data
-		self.catList = trained_data.catList
 		
 		self.mostFreqWords = trained_data.mostFreqWords
 		self.trainedRSD = trained_data.trainedRSD
@@ -23,18 +22,24 @@ class classifyCat(object):
 		
 		self.defaultProb = 0.00000001
 		
+		self.right = [0,0]
+		self.wrong = [0,0]
+		
 	def identifyCat(self, unknown_cat, numToTest):		
 		# read unknown cat file
 		with open(unknown_cat, 'rb') as csvfile:
-			
 			# get random lines from file
 			# count number of rows in file
 			row_count = sum(1 for row in csvfile) - 1
 			samples = Set(random.sample(xrange(row_count), numToTest))
 			samp = 1
+			
+			numTested=0
+			
 			csvfile.seek(0)
 			
 			csvreader = csv.reader(csvfile, delimiter=',', quotechar = '"')
+			
 				
 			next(csvreader, None)
 			next(csvreader, None)  # skip the headers
@@ -55,6 +60,7 @@ class classifyCat(object):
 				item_type,item_id,item_descriptor,count,username,log_id,sector,dept, \
 					majorcat,cat,subcat = row # for training data file
                 #####
+                		numTested += 1
 				
 				#skip if item is just digit
 				if item_descriptor.isdigit():
@@ -67,7 +73,7 @@ class classifyCat(object):
 				
 				fixed_rsd = rsd.split(' ')
 								
-				self.classify(item_descriptor.upper(), fixed_rsd)
+				self.classify(item_descriptor.upper(), fixed_rsd, count)
 												
 # 				possibleCat = []
 # 				for i in range(len(fixed_rsd)):
@@ -111,12 +117,15 @@ class classifyCat(object):
 			
 		#####
 		acc = self.accuracy[0]/sum(self.accuracy)*100
+		print "right=" + str(self.right[0]/self.right[1])
+		print "wrong=" + str(self.wrong[0]/self.wrong[1])
+		print "Recall: " + str((self.right[1]+self.wrong[1])/numTested * 100) + "%"
 		print "Accuracy: " + str(acc) + "%"
 		#####
 		
 		return self.predictedClass
 	
-	def classify(self, item_descriptor, tokens):
+	def classify(self, item_descriptor, tokens, count):
 		possibleCat = []
 	
 		for word in tokens:
@@ -126,28 +135,30 @@ class classifyCat(object):
 		possibleCat = Set(possibleCat)
 		if len(possibleCat) == 1:
 			found = possibleCat.pop()
-			self.predictedClass[item_descriptor] = found
+			self.predictedClass[item_descriptor.upper()] = found.upper()
 			
 			#####
-			if item_descriptor in self.trainedRSD[found]:
-				self.accuracy[0] += 1
+			if item_descriptor in self.trainedRSD[found.upper()]:
+				self.accuracy[0] += int(count)
 			else:
-				self.accuracy[1] += 1
+				self.accuracy[1] += int(count)
 			#####
 			
 			return self.predictedClass
 			
 			
-		elif not possibleCat:
-			return self.naiveBayes(item_descriptor, tokens, self.trainedRSD.keys())
-# 			self.predictedClass[item_descriptor] = "unknown"
-# 			return self.predictedClass
-		else:
-			return self.naiveBayes(item_descriptor, tokens, possibleCat)
+		return self.naiveBayes(item_descriptor, tokens, self.trainedRSD.keys(),count)
+		
+# 		elif not possibleCat:
+# 			return self.naiveBayes(item_descriptor, tokens, self.trainedRSD.keys(),count)
+# # 			self.predictedClass[item_descriptor] = "unknown"
+# # 			return self.predictedClass
+# 		else:
+# 			return self.naiveBayes(item_descriptor, tokens, possibleCat, count)
 	
-	def naiveBayes(self, item_descriptor, tokens, possibleCat):
+	def naiveBayes(self, item_descriptor, tokens, possibleCat, count):
 		# probsOfClasses[class] = probability that RSD is in class
-		probsOfClasses = {}
+		probsOfClasses = []
 		
 		for cat in possibleCat:
 			if cat not in self.trainedRSD.keys():
@@ -164,22 +175,46 @@ class classifyCat(object):
 				itemProb = 0
 								
 			# probability * prior prob
-			probsOfClasses[cat] = itemProb
+			probsOfClasses.append((cat, itemProb))
+# 			probsOfClasses[cat] = itemProb
 # 				probsOfClasses[cat] = itemProb * self.getPrior(cat, self.TotalRSDCount)
 
-		if not probsOfClasses:
-			return self.predictedClass
 			
 		# sort by highest probability
 		# store class with highest probability in predictedClass
-		highestProb = max(probsOfClasses.iteritems(), key=operator.itemgetter(1))[0]
-		self.predictedClass[item_descriptor] = highestProb
+# 		highestProb = max(probsOfClasses.iteritems(), key=operator.itemgetter(1))[0]
+
+		probsOfClasses = sorted(probsOfClasses, key=itemgetter(1))
+		highestProb = probsOfClasses[-1]
+		
+		#normalize probabilities
+		for k in range(0, len(probsOfClasses)):
+			try:
+				probsOfClasses[k] = (probsOfClasses[k][0],probsOfClasses[k][1]/highestProb[1])
+			except:
+				return self.predictedClass
+		
+		# update class highest predicted probability
+		highestProb = probsOfClasses[-1]
+		
+		# remove all potentially wrongly classified brands
+		lowestProb = probsOfClasses[-2]
+		if highestProb[1] - lowestProb[1] < 0.97:
+			return self.predictedClass
+
+		self.predictedClass[item_descriptor] = highestProb[0]
 										
 		#####
-		if item_descriptor in self.trainedRSD[highestProb]: # for training data file
-			self.accuracy[0] += 1
+		if item_descriptor.upper() in self.trainedRSD[highestProb[0].upper()]: # for training data file
+			self.right[0] += highestProb[1]-lowestProb[1] #DEBUG
+			self.right[1] += 1 #DEBUG
+		
+			self.accuracy[0] += int(count)
 		else:
-			self.accuracy[1] += 1
+			self.wrong[0] += highestProb[1]-lowestProb[1] #DEBUG
+			self.wrong[1] += 1 #DEBUG
+			
+			self.accuracy[1] += int(count)
 		#####
 		
 		return self.predictedClass

@@ -6,14 +6,14 @@ from sets import Set
 import read_cat
 
 class trainCat():
-	def __init__(self, trained_cat, cat_list):
-		self.trainedRSD, self.catList = read_cat.readCat(trained_cat, cat_list)
+	def __init__(self, trained_cat):
+		self.trainedRSD = read_cat.readCat(trained_cat)
 		self.mostFreqWords = {}
 		self.frequency = {}
 		self.totalRSDCount = 0
 		
-	def trainFreq(self):				
-		n = 0.4 # change to reflect amount of most frequent words in cat you want to test on
+	def trainFreq(self, n):				
+# 		n = 0.4 # change to reflect amount of most frequent words in cat you want to test on
 		
 		for cat, val in self.trainedRSD.items():
 			self.totalRSDCount += 1

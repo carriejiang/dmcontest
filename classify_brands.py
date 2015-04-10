@@ -30,7 +30,6 @@ class classifyBrands(object):
 	def identifyBrands(self, unknown_brands, numToTest):		
 		# read unknown brands file
 		with open(unknown_brands, 'rb') as csvfile:
-			###
 			# get random lines from file
 			# count number of rows in file
 			row_count = sum(1 for row in csvfile)
@@ -39,14 +38,12 @@ class classifyBrands(object):
 			csvfile.seek(0)
 			
 			numTested = 0
-			###
 			
 			csvreader = csv.reader(csvfile, delimiter=',', quotechar = '"')
 				
 			next(csvreader, None)  # skip the headers
 		
 			for row in csvreader:
-				###
 				if samp not in samples:
 					samp += 1
 					continue
@@ -63,11 +60,10 @@ class classifyBrands(object):
                 	minor_brand,sub_brand,subsub_brand = row # for training data file
 
 				if major_brand.upper() in Set(['INDETERMINATE','PRIVATE_LABEL', 'UNKNOWN']):
-					continue
-					
-				numTested+=1
-				
+					continue	
 				###
+				
+				numTested+=1
 				
 				#skip if item is just digit
 				if item_descriptor.isdigit():
@@ -80,7 +76,7 @@ class classifyBrands(object):
 				
 				tokens = rsd.split(' ')
 												
-				possibleBrands = []
+# 				possibleBrands = []
 # 				for i in range(len(tokens)):
 # 					j = 0
 # 					while j+i+1 < len(tokens)+1:
@@ -117,9 +113,11 @@ class classifyBrands(object):
 # # 						print item_descriptor.upper() + ": " + found.upper() #DEBUG
 # 						self.accuracy[1] += int(count)
 # 					#####
-									
-				if not possibleBrands:
-					self.classify(item_descriptor.upper(), tokens, count)
+# 									
+# 				if not possibleBrands:
+# 					self.classify(item_descriptor.upper(), tokens, count)
+					
+				self.classify(item_descriptor.upper(), tokens, count)
 					
 		
 		#####
@@ -142,7 +140,7 @@ class classifyBrands(object):
 		possibleBrands = Set(possibleBrands)
 		if len(possibleBrands) == 1:
 			found = possibleBrands.pop()
-			self.predictedClass[item_descriptor] = found
+			self.predictedClass[item_descriptor.upper()] = found.upper()
 			
 			#####
 			if item_descriptor.upper() in self.trainedRSD[found.upper()]:
@@ -207,7 +205,7 @@ class classifyBrands(object):
 		# remove all potentially wrongly classified brands
 # 		lowestProb = min(probsOfClasses.iteritems(), key=operator.itemgetter(1))
 		lowestProb = probsOfClasses[-2]
-		if highestProb[1] - lowestProb[1] < 0.7:
+		if highestProb[1] - lowestProb[1] < 0.95:
 			return self.predictedClass
 		
 		self.predictedClass[item_descriptor] = highestProb[0]

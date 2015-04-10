@@ -17,52 +17,60 @@ import time
 
 start = time.time()
 
-NUMTOTEST = 5000
-n = 0.035 #top % most frequent words for each brand in training set
+NUMTOTEST = 10000
 
+# n = 0.035 #top % most frequent words for each brand in training set
+
+#Brands
 BRANDS_LIST = 'data/brands.csv'
-# CAT_LIST = 'data/categories.csv'
-
 TRAINED_BRANDS = './data/trained_brands.csv'
-# TRAINED_CAT = 'data/trained_categories.csv'
-
-# unknown_brands = 'data/unknown_brands.csv'
-# unknown_brands = 'data/unknown_brands_test.csv'
 unknown_brands = './data/trained_brands.csv'
-# unknown_cat = 'data/unknown_categories.csv'
+
+#train data
+for n in [.035]:
+	print "n=" + str(n)
+	print "Training..."
+	trainedBrands = trainBrands(TRAINED_BRANDS, BRANDS_LIST)
+	trainedBrands.trainFreq(n)
+	
+	# use classifier
+	print "Classifying..."
+	brandsClassify = classifyBrands(trainedBrands)
+	# print len(brandsClassify.data.trainedClass_hash.keys())
+	
+	# test unknown cases
+	brandsClassification = brandsClassify.identifyBrands(unknown_brands, NUMTOTEST)
+	
+	# write to file
+with open('classifiedBrands-' + 'time.strftime("%Y%m%d-%H%M%S")' + '.csv', 'wb') as bc:
+	csv_writer = csv.writer(bc, delimiter=',')
+	csv_writer.writerow(['item_id','major_brand'])
+	for item in brandsClassification.keys():
+		csv_writer.writerow([item, brandsClassification[item]])
+
+
+# #Categories
+# # CAT_LIST = 'data/categories.csv'
+# # TRAINED_CAT = './data/trained_categories.csv'
+# # unknown_cat = 'data/unknown_categories.csv'
 # unknown_cat = 'data/trained_categories.csv'
-
-# train data
-# for n in range(25,45, 5):
-# 	print "n=" + str(float(n)/1000)
-print "Training..."
-trainedBrands = trainBrands(TRAINED_BRANDS, BRANDS_LIST)
-trainedBrands.trainFreq(n)
-
-# trainedCategories = trainCat(TRAINED_CAT, CAT_LIST)
-# trainedCategories.trainFreq()
-
-
-# use classifier
-print "Classifying..."
-brandsClassify = classifyBrands(trainedBrands)
-# categoriesClassify = classifyCat(trainedCategories)
-# print len(brandsClassify.data.trainedClass_hash.keys())
-
-
-# test unknown cases
-brandsClassification = brandsClassify.identifyBrands(unknown_brands, NUMTOTEST)
-# categoriesClassification = categoriesClassify.identifyCat(unknown_cat, NUMTOTEST)
-
-# write to file
-# brands
-# with open('classifiedBrands.csv', 'wb') as bc:
-# 	csv_writer = csv.writer(bc, delimiter=',')
-# 	csv_writer.writerow(['item_id','major_brand'])
-# 	for item in brandsClassification.keys():
-# 		csv_writer.writerow([item, brandsClassification[item]])
-
-# categories
+# 
+# # train data
+# for n in [.04]:
+# 	print "n=" + str(n)
+# 	print "Training..."
+# 	trainedCategories = trainCat(TRAINED_CAT)
+# 	trainedCategories.trainFreq(n)
+# 
+# 	# use classifier
+# 	categoriesClassify = classifyCat(trainedCategories)
+# 
+# 	# test unknown cases
+# 	categoriesClassification = categoriesClassify.identifyCat(unknown_cat, NUMTOTEST)
+# 
+# 
+# # write to file
+# # categories
 # with open('classifiedCategories.csv', 'wb') as cc:
 # 	csv_writer = csv.writer(cc, delimiter=',')
 # 	csv_writer.writerow(['item_id','majorcat'])
