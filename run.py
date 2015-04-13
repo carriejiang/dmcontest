@@ -17,36 +17,41 @@ import time
 
 start = time.time()
 
-NUMTOTEST = 10000
+NUMTOTEST = 5000
 
-# n = 0.035 #top % most frequent words for each brand in training set
+n = 0.035 #top % most frequent words for each brand in training set
 
 #Brands
 BRANDS_LIST = 'data/brands.csv'
 TRAINED_BRANDS = './data/trained_brands.csv'
-unknown_brands = './data/trained_brands.csv'
+unknown_brands = './data/trained_brands.csv' #training data as test set
+# unknown_brands = './data/unknown_brands.csv'
 
 #train data
-for n in [.035]:
-	print "n=" + str(n)
-	print "Training..."
-	trainedBrands = trainBrands(TRAINED_BRANDS, BRANDS_LIST)
-	trainedBrands.trainFreq(n)
-	
+print "Training..."
+trainedBrands = trainBrands(TRAINED_BRANDS, BRANDS_LIST)
+trainedBrands.trainFreq(n)
+
+for i in range(0,10):
 	# use classifier
 	print "Classifying..."
 	brandsClassify = classifyBrands(trainedBrands)
 	# print len(brandsClassify.data.trainedClass_hash.keys())
-	
+
 	# test unknown cases
 	brandsClassification = brandsClassify.identifyBrands(unknown_brands, NUMTOTEST)
+
+end = time.time()
+elapsed = end - start
+print "Time: " + str(elapsed) + " seconds"
 	
 	# write to file
-with open('classifiedBrands-' + 'time.strftime("%Y%m%d-%H%M%S")' + '.csv', 'wb') as bc:
-	csv_writer = csv.writer(bc, delimiter=',')
-	csv_writer.writerow(['item_id','major_brand'])
-	for item in brandsClassification.keys():
-		csv_writer.writerow([item, brandsClassification[item]])
+# print "Writing File..."
+# with open('classifiedBrands-' + time.strftime("%Y%m%d-%H%M") + '.csv', 'wb') as bc:
+# 	csv_writer = csv.writer(bc, delimiter=',')
+# 	csv_writer.writerow(['item_id','major_brand'])
+# 	for item in brandsClassification.keys():
+# 		csv_writer.writerow([item, brandsClassification[item]])
 
 
 # #Categories
@@ -76,7 +81,3 @@ with open('classifiedBrands-' + 'time.strftime("%Y%m%d-%H%M%S")' + '.csv', 'wb')
 # 	csv_writer.writerow(['item_id','majorcat'])
 # 	for item in categoriesClassification.keys():
 # 		csv_writer.writerow([item, categoriesClassification[item]])
-
-end = time.time()
-elapsed = end - start
-print "Time: " + str(elapsed) + " seconds"

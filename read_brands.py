@@ -46,16 +46,16 @@ def readBrands(TRAINED_BRANDS, BRANDS_LIST):
 # 			else:
 # 				brandsList[brand.upper()] = brand.upper()
 	
-	for brand in trainedRSD:
-		if (re.match('[^_]', brand)):
-			brand_tokens = brand.split("_")
-			brandsList[' '.join(brand_tokens).upper()] = brand.upper()
-			brandsList[''.join(brand_tokens).upper()] = brand.upper()
-			brandsList['-'.join(brand_tokens).upper()] = brand.upper()
-			
-
-		else:
-			brandsList[brand.upper()] = brand.upper()
+# 	for brand in trainedRSD:
+# 		if (re.match('[^_]', brand)):
+# 			brand_tokens = brand.split("_")
+# 			brandsList[' '.join(brand_tokens).upper()] = brand.upper()
+# 			brandsList[''.join(brand_tokens).upper()] = brand.upper()
+# 			brandsList['-'.join(brand_tokens).upper()] = brand.upper()
+# 			
+# 
+# 		else:
+# 			brandsList[brand.upper()] = brand.upper()
                 
 	return trainedRSD, brandsList
                     
