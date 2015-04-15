@@ -58,7 +58,10 @@ class classifyCat(object):
 
 				#####
 				item_type,item_id,item_descriptor,count,username,log_id,sector,dept, \
-					majorcat,cat,subcat = row # for training data file
+					majorCat,cat,subcat = row # for training data file
+					
+				if majorCat.upper() in Set(['ISC_UNKNOWN','ISC_NON_ITEM']):
+					continue
                 #####
                 		numTested += 1
 				
@@ -66,8 +69,8 @@ class classifyCat(object):
 				if item_descriptor.isdigit():
 					continue
 				
-				rsd = re.sub(r'[^a-zA-Z ]',' ', item_descriptor)				
-# 				rsd = re.sub(r'[^a-zA-Z0-9 ]',' ', item_descriptor)
+# 				rsd = re.sub(r'[^a-zA-Z ]',' ', item_descriptor)				
+				rsd = re.sub(r'[^a-zA-Z0-9 ]',' ', item_descriptor)
 				if not re.search('[a-zA-Z]', rsd):
 					continue
 				
@@ -119,7 +122,7 @@ class classifyCat(object):
 		acc = self.accuracy[0]/sum(self.accuracy)*100
 		print "right=" + str(self.right[0]/self.right[1])
 		print "wrong=" + str(self.wrong[0]/self.wrong[1])
-		print "Recall: " + str((self.right[1]+self.wrong[1])/numTested * 100) + "%"
+		print "Recall: " + str(len(self.predictedClass)/numTested * 100) + "%"
 		print "Accuracy: " + str(acc) + "%"
 		#####
 		
@@ -129,6 +132,8 @@ class classifyCat(object):
 		possibleCat = []
 	
 		for word in tokens:
+			if word.isdigit() or len(word)<2:
+				continue
 			if word.upper() in self.mostFreqWords.keys():
 				possibleCat = possibleCat + self.mostFreqWords[word.upper()]
 
@@ -166,7 +171,7 @@ class classifyCat(object):
 			# calculate probability of seeing each word/token in class/cat
 			# P(word_j|class_i)
 			tokenProbs = [self.getTokenProb(token, cat) for token in tokens \
-						 if not token.isdigit()]
+						 if (len(token)>1)]
 		
 			#calculate probability of seeing entire RSD in cat
 			try:
@@ -175,15 +180,12 @@ class classifyCat(object):
 				itemProb = 0
 								
 			# probability * prior prob
-			probsOfClasses.append((cat, itemProb))
-# 			probsOfClasses[cat] = itemProb
-# 				probsOfClasses[cat] = itemProb * self.getPrior(cat, self.TotalRSDCount)
+# 			probsOfClasses.append((cat, itemProb))
+			probsOfClasses.append((cat, itemProb*self.getPrior(cat, self.TotalRSDCount)))
 
 			
 		# sort by highest probability
 		# store class with highest probability in predictedClass
-# 		highestProb = max(probsOfClasses.iteritems(), key=operator.itemgetter(1))[0]
-
 		probsOfClasses = sorted(probsOfClasses, key=itemgetter(1))
 		highestProb = probsOfClasses[-1]
 		
@@ -199,7 +201,7 @@ class classifyCat(object):
 		
 		# remove all potentially wrongly classified brands
 		lowestProb = probsOfClasses[-2]
-		if highestProb[1] - lowestProb[1] < 0.97:
+		if highestProb[1] - lowestProb[1] < .99:
 			return self.predictedClass
 
 		self.predictedClass[item_descriptor] = highestProb[0]
@@ -211,6 +213,7 @@ class classifyCat(object):
 		
 			self.accuracy[0] += int(count)
 		else:
+# 			print highestProb[1] - lowestProb[1] #DEBUG
 			self.wrong[0] += highestProb[1]-lowestProb[1] #DEBUG
 			self.wrong[1] += 1 #DEBUG
 			
@@ -238,5 +241,5 @@ class classifyCat(object):
 		if tokenFreq is None:
 			return self.defaultProb
 			
-		return tokenFreq/classRSDCount
+		return float(tokenFreq)/classRSDCount
 		

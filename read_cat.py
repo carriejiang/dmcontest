@@ -17,9 +17,10 @@ def readCat(TRAINED_CAT):
         
 		for row in csvreader:
 			item_type, item_id, item_descriptor, count, username, log_id, sector, dept, majorCat, cat, subcat = row
-            
-			if not majorCat:
+			
+			if not majorCat or (majorCat.upper() in Set(['ISC_UNKNOWN','ISC_NON_ITEM'])):
 				continue
+				
 			else:
 				# put RSD in dictionary, key = cat, value = RSD
 				if majorCat.upper() in trainedRSD:

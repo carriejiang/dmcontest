@@ -5,12 +5,12 @@ from sets import Set
 
 import read_brands
 
-class trainBrands():
-	def __init__(self, trained_brands, brands_list):
-		self.trainedRSD, self.brandsList = read_brands.readBrands(trained_brands, brands_list)
+class trainBrands(object):
+	def __init__(self, parsed_data):
+		(self.trainedRSD, self.numKnownBrands) = parsed_data
 		self.mostFreqWords = {}
 		self.frequency = {}
-		self.uniqueFrequency = {}
+# 		self.uniqueFrequency = {}
 		self.totalRSDCount = 0
 		
 	def trainFreq(self, n):				
@@ -20,12 +20,12 @@ class trainBrands():
 			self.totalRSDCount += 1
 		
 			cnt = Counter()
-			uniqueCnt = Counter() #keeps track of word occurrence in each RSD
+# 			uniqueCnt = Counter() #keeps track of word occurrence in each RSD
 			
 			for rsd in val:
 				fixed_rsd = re.sub(r'[^a-zA-Z0-9 ]','', rsd)
 				RSDtokens = fixed_rsd.split(' ') # split RSD into words
-				uniqueTokens = Set()
+# 				uniqueTokens = Set()
 				
 				for i in RSDtokens:
 					
@@ -35,12 +35,12 @@ class trainBrands():
 					
 					cnt[i] += 1 #increment count of word/token for brand
 					
-					if i not in uniqueTokens:
-						uniqueCnt[i] += 1 
+# 					if i not in uniqueTokens:
+# 						uniqueCnt[i] += 1 
 			
 			# count of all words
 			self.frequency[brand] = dict(cnt)
-			self.uniqueFrequency[brand] = dict(uniqueCnt)
+# 			self.uniqueFrequency[brand] = dict(uniqueCnt)
 					
 			mostFreq = cnt.most_common(int(math.ceil(len(cnt)*n))) # take top n% most frequent words
 			
@@ -66,17 +66,17 @@ class trainBrands():
 		except:
 			return None	
 			
-	def getUniqueFrequency(self, token, className):
-		# returns frequencies for each token in class
-		try:
-			c = self.uniqueFrequency[className]
-		except:
-			raise NotSeen(className)
-
-		try:
-			return c[token]
-		except:
-			return None	
+# 	def getUniqueFrequency(self, token, className):
+# 		# returns frequencies for each token in class
+# 		try:
+# 			c = self.uniqueFrequency[className]
+# 		except:
+# 			raise NotSeen(className)
+# 
+# 		try:
+# 			return c[token]
+# 		except:
+# 			return None	
 
 	
 			

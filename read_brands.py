@@ -2,13 +2,14 @@ import csv
 import re
 from sets import Set
 
-def readBrands(TRAINED_BRANDS, BRANDS_LIST):
+def readBrands(TRAINED_BRANDS):
 	"""
 	Load the trained brands and iterate through
 	"""
 	
 	# dictionary of brands -> RSD
 	trainedRSD = {}
+	numKnownBrands = 0
 
 	with open(TRAINED_BRANDS, 'rb') as csvfile:
 		csvreader = csv.reader(csvfile, delimiter=',', quotechar = '"')
@@ -25,13 +26,15 @@ def readBrands(TRAINED_BRANDS, BRANDS_LIST):
 			if major_brand.upper() in unknownList:
 				continue
 			else: # put RSD in dictionary, key = brand, value = RSD
+				numKnownBrands += int(count)
+				
 				if major_brand.upper() in trainedRSD:
 					trainedRSD[major_brand.upper()].add(item_descriptor.upper())
 				else:
 					trainedRSD[major_brand.upper()] = Set([item_descriptor.upper()])
 					
-	# brands list dictionary
-	brandsList = {}
+# #brands list dictionary
+# 	brandsList = {}
 	
 # 	with open(BRANDS_LIST, 'rb') as brfile:
 # 		csvreader = csv.reader(brfile, delimiter=',', quotechar = '"')
@@ -57,7 +60,7 @@ def readBrands(TRAINED_BRANDS, BRANDS_LIST):
 # 		else:
 # 			brandsList[brand.upper()] = brand.upper()
                 
-	return trainedRSD, brandsList
+	return trainedRSD, numKnownBrands
                     
 
 if __name__ == "__main__":

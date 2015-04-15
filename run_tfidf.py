@@ -1,5 +1,5 @@
 """
-Run this script to implement the Naive Bayes Classifier.
+Run this script to implement TFIDF.
 
 Output is written in CSV files named 
 brandsClassified.csv and categoriesClassified.csv
@@ -8,19 +8,19 @@ for classified unknown brands and categories respectively.
 
 """
 
-from classify_brands import classifyBrands
-from train_brands import trainBrands
-from read_brands import readBrands
-from classify_cat import classifyCat
-from train_cat import trainCat
+# from classify_brands_tfidf import classifyBrands
+# from train_brands_tfidf import trainBrands
+# from read_brands_tfidf import readBrands
+from read_cat_tfidf import readCat
+from classify_cat_tfidf import classifyCat
+from train_cat_tfidf import trainCat
 import csv
 import time
 
 start = time.time()
 
+n = .05 #top % most frequent words for each brand in training set
 NUMTOTEST = 20000
-
-n = 0.035 #top % most frequent words for each brand in training set
 # 
 # #Brands
 # # BRANDS_LIST = 'data/brands.csv'
@@ -36,7 +36,7 @@ n = 0.035 #top % most frequent words for each brand in training set
 # print "Training..."
 # trainedBrands = trainBrands(parseData)
 # trainedBrands.trainFreq(n)
-# 
+
 # 
 # #use classifier
 # print "Classifying..."
@@ -50,8 +50,8 @@ n = 0.035 #top % most frequent words for each brand in training set
 # with open('classifiedBrands-' + time.strftime("%Y%m%d-%H%M") + '.csv', 'wb') as bc:
 # 	csv_writer = csv.writer(bc, delimiter=',')
 # 	csv_writer.writerow(['item_id','major_brand'])
-# 	for k,v in brandsClassification:
-# 		csv_writer.writerow([k, v])
+# 	for item in brandsClassification.keys():
+# 		csv_writer.writerow([item, brandsClassification[item]])
 
 
 #Categories
@@ -60,9 +60,14 @@ TRAINED_CAT = './data/trained_categories.csv'
 # unknown_cat = 'data/unknown_categories.csv'
 unknown_cat = 'data/trained_categories.csv'
 
+
+#read data
+print "Reading training file..."
+parseData = readCat(TRAINED_CAT)
+
 # train data
 print "Training..."
-trainedCategories = trainCat(TRAINED_CAT)
+trainedCategories = trainCat(parseData)
 trainedCategories.trainFreq(n)
 
 # use classifier
@@ -70,7 +75,7 @@ print "Classifying..."
 
 categoriesClassify = classifyCat(trainedCategories)
 # test unknown cases
-categoriesClassification = categoriesClassify.identifyCat(unknown_cat, NUMTOTEST)
+categoriesClassification = categoriesClassify.classify(unknown_cat, NUMTOTEST)
 
 
 # # write to file

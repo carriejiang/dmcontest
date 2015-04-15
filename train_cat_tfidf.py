@@ -2,48 +2,43 @@ from collections import Counter
 import math
 import re
 from sets import Set
+from ExceptionNotSeen import NotSeen
 
-import read_cat
+import read_cat_tfidf
 
-class trainCat():
-	def __init__(self, trained_cat):
-		self.trainedRSD = read_cat.readCat(trained_cat)
-		self.mostFreqWords = {}
+class trainCat(object):
+	def __init__(self, parsed_data):
+		(self.trainedRSD, self.setTrainedRSD, self.numKnownCat) = parsed_data
 		self.frequency = {}
+		self.termToCat = {}
+		self.numTermsInCat = {}
 		self.totalRSDCount = 0
 		
-	def trainFreq(self, n):						
+	def trainFreq(self,n):						
 		for cat, val in self.trainedRSD.items():
-			self.totalRSDCount += 1
-		
 			cnt = Counter()
-			
-			for rsd in val:
+						
+			for (rsd,count) in val:
 				fixed_rsd = re.sub(r'[^a-zA-Z0-9 ]','', rsd)
 				RSDtokens = fixed_rsd.split(' ') # split RSD into words
 				
 				for i in RSDtokens:
 					# if word/token is integer, continue
-					if i.isdigit():
+					if i.isdigit() or len(i)<2:
 						continue
 					
-					cnt[i] += 1 #increment count of word/token for cat
+					cnt[i] += count #increment count of word/token for cat
 			
 			# count of all words
-			self.frequency[cat] = dict(cnt)
-					
-			mostFreq = cnt.most_common(int(math.ceil(len(cnt)*n))) # take top n% most frequent words
-			
-			for (e, c) in mostFreq:
-				if e == '':
-					break
-				
-				if e in self.mostFreqWords:
-					self.mostFreqWords[e].append(cat)
+			self.numTermsInCat[cat] = sum(cnt.values())
+			self.frequency[cat] = dict(cnt)	
+									
+			for e in cnt:
+				if e in self.termToCat:
+					self.termToCat[e].add(cat)
 				else:
-					self.mostFreqWords[e] = [cat]
-			
-				
+					self.termToCat[e] = Set([cat])
+							
 	def getFrequency(self, token, className):
 		# returns frequencies for each token in class
 		try:

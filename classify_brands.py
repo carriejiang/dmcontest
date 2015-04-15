@@ -9,12 +9,11 @@ from ExceptionNotSeen import NotSeen
 
 class classifyBrands(object):
 	def __init__(self, trained_data):
-		self.data = trained_data
-# 		self.brandsList = trained_data.brandsList
-		
+		self.data = trained_data		
 		self.mostFreqWords = trained_data.mostFreqWords
 		self.trainedRSD = trained_data.trainedRSD
 		self.TotalRSDCount = trained_data.totalRSDCount
+		self.numKnownBrands = trained_data.numKnownBrands
 		
 		self.predictedClass = {} # dict of most probable class for RSD
 								 # predictedClass[RSD] = class
@@ -60,14 +59,14 @@ class classifyBrands(object):
 					continue	
 				###
 				
-				numTested+=1
+				numTested+=int(count)
 				
 				#skip if item is just digit
 				if item_descriptor.isdigit():
 					continue
 				
-				rsd = re.sub(r'[^a-zA-Z ]',' ', item_descriptor.upper())				
-# 				rsd = re.sub(r'[^a-zA-Z0-9 ]',' ', item_descriptor)
+# 				rsd = re.sub(r'[^a-zA-Z ]',' ', item_descriptor.upper())				
+				rsd = re.sub(r'[^a-zA-Z0-9 ]',' ', item_descriptor.upper())
 				if not re.search('[a-zA-Z]', rsd):
 					continue
 				
@@ -121,7 +120,7 @@ class classifyBrands(object):
 		acc = self.accuracy[0]/sum(self.accuracy)*100
 # 		print "right=" + str(self.right[0]/self.right[1])
 # 		print "wrong=" + str(self.wrong[0]/self.wrong[1])
-		print "Recall: " + str(len(self.predictedClass)/numTested * 100) + "%"
+		print "Recall: " + str(numTested/(self.numKnownBrands+numTested) * 100) + "%"
 		print "Accuracy: " + str(acc) + "%"
 		#####
 		
@@ -131,6 +130,8 @@ class classifyBrands(object):
 		possibleBrands = []
 	
 		for word in tokens:
+			if word.isdigit() or len(word)<2:
+				continue
 			if word.upper() in self.mostFreqWords.keys():
 				possibleBrands = possibleBrands + self.mostFreqWords[word.upper()]
 
@@ -160,7 +161,7 @@ class classifyBrands(object):
 		probsOfClasses = []
 		
 		for brand in possibleBrands:
-			if brand not in self.trainedRSD.keys():
+			if brand not in self.trainedRSD:
 				continue
 			# calculate probability of seeing each word/token in class/brand
 			# P(word_j|class_i)
@@ -198,23 +199,23 @@ class classifyBrands(object):
 		highestProb = probsOfClasses[-1]
 		
 		# remove all potentially wrongly classified brands
-# 		lowestProb = min(probsOfClasses.iteritems(), key=operator.itemgetter(1))
-		lowestProb = probsOfClasses[-2]
-		if highestProb[1] - lowestProb[1] < 0.97:
+# 		lowerProb = min(probsOfClasses.iteritems(), key=operator.itemgetter(1))
+		lowerProb = probsOfClasses[-2]
+		if highestProb[1] - lowerProb[1] < 0.97:
 			return self.predictedClass
 		
 		self.predictedClass[item_descriptor] = highestProb[0]
 								
 		#####
 		if item_descriptor.upper() in self.trainedRSD[highestProb[0].upper()]: # for training data file
-# 			print "right: " + item_descriptor + ": " + str(highestProb[1]-lowestProb[1]) #DEBUG
-# 			self.right[0] += highestProb[1]-lowestProb[1] #DEBUG
+# 			print "right: " + item_descriptor + ": " + str(highestProb[1]-lowerProb[1]) #DEBUG
+# 			self.right[0] += highestProb[1]-lowerProb[1] #DEBUG
 # 			self.right[1] += 1 #DEBUG
 		
 			self.accuracy[0] += int(count)
 		else:
-# 			print "wrong: " + item_descriptor + ": " + str(highestProb[1]-lowestProb[1]) #DEBUG
-# 			self.wrong[0] += highestProb[1]-lowestProb[1] #DEBUG
+# 			print "wrong: " + item_descriptor + ": " + str(highestProb[1]-lowerProb[1]) #DEBUG
+# 			self.wrong[0] += highestProb[1]-lowerProb[1] #DEBUG
 # 			self.wrong[1] += 1 #DEBUG
 			
 # 			print item_descriptor.upper() #DEBUG
@@ -244,5 +245,5 @@ class classifyBrands(object):
 		if tokenFreq is None:
 			return self.defaultProb
 		
-		return tokenFreq/classRSDCount
+		return float(tokenFreq)/classRSDCount
 		
