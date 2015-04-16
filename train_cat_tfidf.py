@@ -14,7 +14,7 @@ class trainCat(object):
 		self.numTermsInCat = {}
 		self.totalRSDCount = 0
 		
-	def trainFreq(self,n):						
+	def trainFreq(self):						
 		for cat, val in self.trainedRSD.items():
 			cnt = Counter()
 						
