@@ -51,15 +51,15 @@ class classifyCat(object):
 
 					
 # 				# determines if word in RSD is most frequented in cat training data
-				item_type,item_id,item_descriptor,count = row # for unknown cat file
+# 				item_type,item_id,item_descriptor,count = row # for unknown cat file
 
-# 				#####
-# 				item_type,item_id,item_descriptor,count,username,log_id,major_cat,medium_cat, \
-#                 	minor_cat,sub_cat,subsub_cat = row # for training data file
-# 
-# 				if major_cat.upper() in Set(['ISC_UNKNOWN','ISC_NON_ITEM']):
-# 					continue	
-# 				###
+				#####
+				item_type,item_id,item_descriptor,count,username,log_id,major_cat,medium_cat, \
+                	minor_cat,sub_cat,subsub_cat = row # for training data file
+
+				if major_cat.upper() in Set(['ISC_UNKNOWN','ISC_NON_ITEM']):
+					continue	
+				###
 				
 				numTested+=int(count)
 				
@@ -83,12 +83,12 @@ class classifyCat(object):
 				if len(possibleCat) == 1:
 					self.predictedClass[item_descriptor.upper()] = possibleCat[0]
 					
-# 					#####
-# 					if item_descriptor.upper() in self.setTrainedRSD[possibleCat[0]]: # for training data file
-# 						self.accuracy[0] += int(count)
-# 					else:
-# 						self.accuracy[1] += int(count)
-# 					#####
+					#####
+					if item_descriptor.upper() in self.setTrainedRSD[possibleCat[0]]: # for training data file
+						self.accuracy[0] += int(count)
+					else:
+						self.accuracy[1] += int(count)
+					#####
 					
 					continue
 					
@@ -100,13 +100,13 @@ class classifyCat(object):
 					self.tfidf(item_descriptor.upper(), tokens, possibleCat, count)
 					
 		
-# 		#####
-# 		acc = self.accuracy[0]/sum(self.accuracy)*100
-# 		print "right=" + str(self.right[0]/self.right[1])
-# 		print "wrong=" + str(self.wrong[0]/self.wrong[1])
+		#####
+		acc = self.accuracy[0]/sum(self.accuracy)*100
+		print "right=" + str(self.right[0]/self.right[1])
+		print "wrong=" + str(self.wrong[0]/self.wrong[1])
 		print "Recall: " + str(numTested/(self.numKnownCat+numTested) * 100) + "%"
-# 		print "Accuracy: " + str(acc) + "%"
-# 		#####
+		print "Accuracy: " + str(acc) + "%"
+		#####
 		
 		return self.predictedClass
 
@@ -150,12 +150,12 @@ class classifyCat(object):
 		highestProb = probsOfClasses[-1]
 		
 		if len(probsOfClasses) == 1:
-# 			#####
-# 			if item_descriptor.upper() in self.setTrainedRSD[highestProb[0].upper()]: # for training data file
-# 				self.accuracy[0] += int(count)
-# 			else:
-# 				self.accuracy[1] += int(count)
-# 			#####
+			#####
+			if item_descriptor.upper() in self.setTrainedRSD[highestProb[0].upper()]: # for training data file
+				self.accuracy[0] += int(count)
+			else:
+				self.accuracy[1] += int(count)
+			#####
 				
 			self.predictedClass[item_descriptor] = highestProb[0]
 			return self.predictedClass
@@ -167,18 +167,18 @@ class classifyCat(object):
 		
 		self.predictedClass[item_descriptor] = highestProb[0]
 								
-# 		#####
-# 		if item_descriptor.upper() in self.setTrainedRSD[highestProb[0].upper()]: # for training data file
-# 			self.right[0] += highestProb[1]-lowerProb[1] #DEBUG
-# 			self.right[1] += 1 #DEBUG
-# 		
-# 			self.accuracy[0] += int(count)
-# 		else:
-# 			self.wrong[0] += highestProb[1]-lowerProb[1] #DEBUG
-# 			self.wrong[1] += 1 #DEBUG
-# 			
-# 			self.accuracy[1] += int(count)
-# 		#####
+		#####
+		if item_descriptor.upper() in self.setTrainedRSD[highestProb[0].upper()]: # for training data file
+			self.right[0] += highestProb[1]-lowerProb[1] #DEBUG
+			self.right[1] += 1 #DEBUG
+		
+			self.accuracy[0] += int(count)
+		else:
+			self.wrong[0] += highestProb[1]-lowerProb[1] #DEBUG
+			self.wrong[1] += 1 #DEBUG
+			
+			self.accuracy[1] += int(count)
+		#####
 		
 		return self.predictedClass
 				

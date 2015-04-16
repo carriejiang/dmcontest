@@ -18,32 +18,32 @@ import time
 
 start = time.time()
 
-NUMTOTEST = 10000
+NUMTOTEST = 20000
 
 n = 0.035 #top % most frequent words for each brand in training set
-# 
-# #Brands
-# # BRANDS_LIST = 'data/brands.csv'
-# TRAINED_BRANDS = './data/trained_brands.csv'
-# unknown_brands = './data/trained_brands.csv' #training data as test set
-# # unknown_brands = './data/unknown_brands.csv'
-# 
-# #read data
-# print "Reading training file..."
-# parseData = readBrands(TRAINED_BRANDS)
-# 
-# #train data
-# print "Training..."
-# trainedBrands = trainBrands(parseData)
-# trainedBrands.trainFreq(n)
-# 
-# 
-# #use classifier
-# print "Classifying..."
-# brandsClassify = classifyBrands(trainedBrands)
-# #print len(brandsClassify.data.trainedClass_hash.keys())
-# # test unknown cases
-# brandsClassification = brandsClassify.identifyBrands(unknown_brands, NUMTOTEST)
+
+#Brands
+# BRANDS_LIST = 'data/brands.csv'
+TRAINED_BRANDS = './data/trained_brands.csv'
+unknown_brands = './data/trained_brands.csv' #training data as test set
+# unknown_brands = './data/unknown_brands.csv'
+
+#read data
+print "Reading training file..."
+parseData = readBrands(TRAINED_BRANDS)
+
+#train data
+print "Training..."
+trainedBrands = trainBrands(parseData)
+trainedBrands.trainFreq(n)
+
+
+#use classifier
+print "Classifying..."
+brandsClassify = classifyBrands(trainedBrands)
+#print len(brandsClassify.data.trainedClass_hash.keys())
+# test unknown cases
+brandsClassification = brandsClassify.identifyBrands(unknown_brands, NUMTOTEST)
 	
 	# write to file
 # print "Writing File..."
@@ -53,24 +53,24 @@ n = 0.035 #top % most frequent words for each brand in training set
 # 	for k,v in brandsClassification:
 # 		csv_writer.writerow([k, v])
 
-
-#Categories
-# CAT_LIST = 'data/categories.csv'
-TRAINED_CAT = './data/trained_categories.csv'
-# unknown_cat = 'data/unknown_categories.csv'
-unknown_cat = 'data/trained_categories.csv'
-
-# train data
-print "Training..."
-trainedCategories = trainCat(TRAINED_CAT)
-trainedCategories.trainFreq(n)
-
-# use classifier
-print "Classifying..."
-
-categoriesClassify = classifyCat(trainedCategories)
-# test unknown cases
-categoriesClassification = categoriesClassify.identifyCat(unknown_cat, NUMTOTEST)
+# 
+# #Categories
+# # CAT_LIST = 'data/categories.csv'
+# TRAINED_CAT = './data/trained_categories.csv'
+# # unknown_cat = 'data/unknown_categories.csv'
+# unknown_cat = 'data/trained_categories.csv'
+# 
+# # train data
+# print "Training..."
+# trainedCategories = trainCat(TRAINED_CAT)
+# trainedCategories.trainFreq(n)
+# 
+# # use classifier
+# print "Classifying..."
+# 
+# categoriesClassify = classifyCat(trainedCategories)
+# # test unknown cases
+# categoriesClassification = categoriesClassify.identifyCat(unknown_cat, NUMTOTEST)
 
 
 # # write to file

@@ -65,7 +65,6 @@ class classifyBrands(object):
 				if item_descriptor.isdigit():
 					continue
 				
-# 				rsd = re.sub(r'[^a-zA-Z ]',' ', item_descriptor.upper())				
 				rsd = re.sub(r'[^a-zA-Z0-9 ]',' ', item_descriptor.upper())
 				if not re.search('[a-zA-Z]', rsd):
 					continue
@@ -208,7 +207,6 @@ class classifyBrands(object):
 								
 		#####
 		if item_descriptor.upper() in self.trainedRSD[highestProb[0].upper()]: # for training data file
-# 			print "right: " + item_descriptor + ": " + str(highestProb[1]-lowerProb[1]) #DEBUG
 # 			self.right[0] += highestProb[1]-lowerProb[1] #DEBUG
 # 			self.right[1] += 1 #DEBUG
 		
@@ -218,9 +216,7 @@ class classifyBrands(object):
 # 			self.wrong[0] += highestProb[1]-lowerProb[1] #DEBUG
 # 			self.wrong[1] += 1 #DEBUG
 			
-# 			print item_descriptor.upper() #DEBUG
-# 			print probsOfClasses #DEBUG
-# 			print item_descriptor.upper() + ": " + highestProb[0].upper() #DEBUG
+
 			self.accuracy[1] += int(count)
 		#####
 		
