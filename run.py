@@ -18,7 +18,7 @@ import time
 
 start = time.time()
 
-NUMTOTEST = 20000
+NUMTOTEST = 200000
 
 n = 0.035 #top % most frequent words for each brand in training set
 

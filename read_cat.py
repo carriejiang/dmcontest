@@ -30,7 +30,3 @@ def readCat(TRAINED_CAT):
 	
                 
 	return trainedRSD
-                    
-
-if __name__ == "__main__":
-    read()

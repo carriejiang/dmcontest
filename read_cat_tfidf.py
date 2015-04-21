@@ -34,7 +34,3 @@ def readCat(TRAINED_CAT):
 					setTrainedRSD[majorCat.upper()] = Set(item_descriptor.upper())
 					                
 	return trainedRSD, setTrainedRSD, numKnowncat
-                    
-
-if __name__ == "__main__":
-    read()

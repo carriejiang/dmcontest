@@ -20,10 +20,10 @@ class classifyBrands(object):
 								 
 		self.accuracy = [0,0] # [correct classification, incorrect classification]
 		
-		self.defaultProb = .00000001
+		self.defaultProb = .0000000001
 		
-# 		self.right = [0,0]
-# 		self.wrong = [0,0]
+		self.right = [0,0]
+		self.wrong = [0,0]
 		
 	def identifyBrands(self, unknown_brands, numToTest):		
 		# read unknown brands file
@@ -117,8 +117,8 @@ class classifyBrands(object):
 		
 		#####
 		acc = self.accuracy[0]/sum(self.accuracy)*100
-# 		print "right=" + str(self.right[0]/self.right[1])
-# 		print "wrong=" + str(self.wrong[0]/self.wrong[1])
+		print "right=" + str(self.right[0]/self.right[1])
+		print "wrong=" + str(self.wrong[0]/self.wrong[1])
 		print "Recall: " + str(numTested/(self.numKnownBrands+numTested) * 100) + "%"
 		print "Accuracy: " + str(acc) + "%"
 		#####
@@ -200,21 +200,20 @@ class classifyBrands(object):
 		# remove all potentially wrongly classified brands
 # 		lowerProb = min(probsOfClasses.iteritems(), key=operator.itemgetter(1))
 		lowerProb = probsOfClasses[-2]
-		if highestProb[1] - lowerProb[1] < 0.97:
+		if highestProb[1] - lowerProb[1] < 0.99:
 			return self.predictedClass
 		
 		self.predictedClass[item_descriptor] = highestProb[0]
 								
 		#####
 		if item_descriptor.upper() in self.trainedRSD[highestProb[0].upper()]: # for training data file
-# 			self.right[0] += highestProb[1]-lowerProb[1] #DEBUG
-# 			self.right[1] += 1 #DEBUG
+			self.right[0] += highestProb[1]-lowerProb[1] #DEBUG
+			self.right[1] += 1 #DEBUG
 		
 			self.accuracy[0] += int(count)
 		else:
-# 			print "wrong: " + item_descriptor + ": " + str(highestProb[1]-lowerProb[1]) #DEBUG
-# 			self.wrong[0] += highestProb[1]-lowerProb[1] #DEBUG
-# 			self.wrong[1] += 1 #DEBUG
+			self.wrong[0] += highestProb[1]-lowerProb[1] #DEBUG
+			self.wrong[1] += 1 #DEBUG
 			
 
 			self.accuracy[1] += int(count)

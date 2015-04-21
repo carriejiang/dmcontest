@@ -61,7 +61,3 @@ def readBrands(TRAINED_BRANDS):
 # 			brandsList[brand.upper()] = brand.upper()
                 
 	return trainedRSD, numKnownBrands
-                    
-
-if __name__ == "__main__":
-    read()
